@@ -15,6 +15,6 @@ module setStatic './setStorageStaticWebsite.ps1.bicep' = {
   params: {
     storageAccountName: storageAccount.name
     staticWebsiteState: 'Enabled'
-    userAssignedIdentityName: 'AEU1-PE-CTL-D1-uaiEnableStaticWebsite'
+    userAssignedIdentityName: 'texttrek'
   }
 }
