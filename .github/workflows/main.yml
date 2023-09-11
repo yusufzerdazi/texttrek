@@ -19,5 +19,5 @@ jobs:
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: texttrek
-        template: ./BICEP/main.bicep
+        template: ./bicep/main.bicep
         failOnStdErr: false
