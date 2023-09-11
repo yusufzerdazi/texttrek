@@ -7,17 +7,10 @@ param storageAccountName string
 ])
 param staticWebsiteState string = 'Enabled'
 
-param userAssignedIdentityName string
 param now string = utcNow('F')
 
 resource setStorageStaticWebsite 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
   name: take(replace('setStaticWebsite-${storageAccountName}', '@', '_'), 64)
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', userAssignedIdentityName)}': {}
-    }
-  }
   location: resourceGroup().location
   kind: 'AzurePowerShell'
   properties: {
