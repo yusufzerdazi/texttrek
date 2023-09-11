@@ -9,11 +9,3 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-02-01' = {
 
   }
 }
-
-module setStatic './setStorageStaticWebsite.ps1.bicep' = {
-  name: 'setStatic'
-  params: {
-    storageAccountName: storageAccount.name
-    staticWebsiteState: 'Enabled'
-  }
-}
