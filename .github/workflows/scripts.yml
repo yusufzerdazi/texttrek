@@ -27,4 +27,5 @@ jobs:
         env:
           OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
           OPEN_AI_ORGANIZATION: ${{ secrets.OPEN_AI_ORGANIZATION }}
+          BLOB_CONNECTION_STRING: ${{ secrets.BLOB_CONNECTION_STRING }}
         run: python scripts/main.py
