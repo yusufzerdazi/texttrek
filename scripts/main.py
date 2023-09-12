@@ -3,6 +3,7 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 import openai
 import requests
 
+root_path = os.environ["ROOT_PATH"]
 openai.organization = os.environ["OPEN_AI_ORGANIZATION"]
 openai.api_key = os.environ["OPEN_AI_KEY"]
 
@@ -33,9 +34,9 @@ else:
 # Generate next section of the story
 text_input = "Investigate the room I'm in"
 if next_index == "000":
-  prompt = open("./templates/initial.txt", "r").read()
+  prompt = open(f"{root_path}/scripts/templates/initial.txt", "r").read()
 else:
-  prompt = (open("./templates/continuation.txt", "r").read()
+  prompt = (open(f"{root_path}/scripts/templates/continuation.txt", "r").read()
     .replace("{{story}}", container_client.download_blob(current_trek).content_as_text())
     .replace("{{command}}", text_input)
   )
@@ -51,7 +52,7 @@ container_client.upload_blob(trek + "/" + f"{next_index}.txt", prompt_result.cho
 # Generate accompanying image
 summary_result = openai.ChatCompletion.create(
   model="gpt-4",
-  messages=[{"role": "user", "content": open("./templates/image.txt", "r").read().replace("{{prompt}}", container_client.download_blob(current_trek).content_as_text())}]
+  messages=[{"role": "user", "content": open(f"{root_path}/scripts/templates/image.txt", "r").read().replace("{{prompt}}", container_client.download_blob(current_trek).content_as_text())}]
 )
 container_client.upload_blob(trek + "/" + f"{next_index}_summary.txt", summary_result.choices[0].message.content)
 

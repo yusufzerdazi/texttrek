@@ -28,4 +28,5 @@ jobs:
           OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
           OPEN_AI_ORGANIZATION: ${{ secrets.OPEN_AI_ORGANIZATION }}
           BLOB_CONNECTION_STRING: ${{ secrets.BLOB_CONNECTION_STRING }}
+          ROOT_PATH: ${{ github.workspace }}
         run: python scripts/main.py
