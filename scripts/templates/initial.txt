@@ -1,0 +1,1 @@
+Generate an inital prompt for a text-based adventure game. The prompt should set the scene of the world, the character and their current location. It should ask the user what action they wish to take.

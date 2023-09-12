@@ -1,0 +1,4 @@
+Summarise this into a concise prompt for an accompanying photorealistic artwork
+---
+{{prompt}}
+---

@@ -1,0 +1,9 @@
+Generate a continuation of the user driven text based adventure story summarised below
+---
+{{story}}
+---
+
+The user has inputted the following command
+---
+{{command}}
+---

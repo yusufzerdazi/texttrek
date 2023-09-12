@@ -1,7 +1,7 @@
 on: [push]
 name: Bicep
 jobs:
-  build-and-deploy:
+  provision:
     runs-on: ubuntu-latest
     steps:
 
