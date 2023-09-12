@@ -1,3 +1,4 @@
 {
-    "python.defaultInterpreterPath": "C:\\Code\\texttrek\\scripts\\.venv\\Scripts"
+    "python.defaultInterpreterPath": "C:\\Code\\texttrek\\scripts\\.venv\\Scripts",
+    "css.lint.unknownAtRules": "ignore"
 }
