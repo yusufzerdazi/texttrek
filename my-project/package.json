@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "fast-xml-parser": "^4.2.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "stream": "^0.0.2",
