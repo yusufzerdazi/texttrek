@@ -32,7 +32,7 @@ else:
 # Combine latest prompts with previous prompts into a single command
 
 # Generate next section of the story
-text_input = "Attack the evil goblin within for the final battle. This should be the conclusion of the story"
+text_input = "Eat the goblin corpse"
 if next_index == "000":
   prompt = open(f"{root_path}/scripts/templates/initial.txt", "r").read()
 else:
