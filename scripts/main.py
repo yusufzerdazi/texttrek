@@ -32,7 +32,7 @@ else:
 # Combine latest prompts with previous prompts into a single command
 
 # Generate next section of the story
-text_input = "Decipher the runes on the altar"
+text_input = "Unlock the altar, ready for the final battle"
 if next_index == "000":
   prompt = open(f"{root_path}/scripts/templates/initial.txt", "r").read()
 else:
