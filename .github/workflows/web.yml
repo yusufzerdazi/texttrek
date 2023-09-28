@@ -4,10 +4,11 @@ on:
   push:
     paths:
     - web
+    - .github\workflows\web.yml
   workflow_dispatch:
 
 jobs:
-  provision:
+  deploy:
     runs-on: ubuntu-latest
     steps:
 
@@ -34,5 +35,5 @@ jobs:
       with:
         azcliversion: 2.52.0
         inlineScript: |
-          az storage blob upload-batch --destination '$web' --account-name texttrek --source ./web/dist
+          az storage blob upload-batch --destination '$web' --account-name texttrek --source ./web/dist --overwrite
   
