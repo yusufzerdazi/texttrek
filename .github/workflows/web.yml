@@ -35,5 +35,6 @@ jobs:
       with:
         azcliversion: 2.52.0
         inlineScript: |
+          az storage blob delete-batch --account-name texttrek --source $web
           az storage blob upload-batch --destination '$web' --account-name texttrek --source ./web/dist --overwrite
   
