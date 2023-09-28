@@ -3,8 +3,8 @@ name: web
 on:
   push:
     paths:
-    - web
-    - .github\workflows\web.yml
+    - web/**
+    - .github/workflows/web.yml
   workflow_dispatch:
 
 jobs:
