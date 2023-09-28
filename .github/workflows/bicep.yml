@@ -3,6 +3,7 @@ on:
     paths:
     - '**.bicep'
     - .github/workflows/bicep.yml
+  workflow_dispatch:
 
 name: infrastructure
 
