@@ -50,7 +50,7 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
   properties: {
     serverFarmId: hostingPlan.id
     siteConfig: {
-      linuxFxVersion: 'python|3.11'
+      linuxFxVersion: 'Python|3.11'
       appSettings: [
         {
           name: 'AzureWebJobsStorage'
