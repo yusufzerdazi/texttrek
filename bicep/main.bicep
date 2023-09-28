@@ -43,13 +43,14 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-09-01' = {
 resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
   name: 'texttrek'
   location: resourceGroup().location
-  kind: 'functionapp'
+  kind: 'functionapp,linux'
   identity: {
     type: 'SystemAssigned'
   }
   properties: {
     serverFarmId: hostingPlan.id
     siteConfig: {
+      linuxFxVersion: 'python|3.11'
       appSettings: [
         {
           name: 'AzureWebJobsStorage'
