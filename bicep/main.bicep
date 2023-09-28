@@ -37,9 +37,8 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-09-01' = {
     name: 'Y1'
     tier: 'Dynamic'
   }
-  kind: 'app,linux'
   properties: {
-      reserved: true
+    reserved: true
   }
 }
 
