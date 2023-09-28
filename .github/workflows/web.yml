@@ -1,0 +1,37 @@
+name: web
+
+on:
+  push:
+    paths:
+    - web
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+    steps:
+
+    # Checkout code
+    - uses: actions/checkout@main
+
+    # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.x'
+        
+    - run: npm ci
+      working-directory: ./web
+    - run: npm run build --if-present
+      working-directory: ./web
+
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.52.0
+        inlineScript: |
+          az storage blob upload-batch --destination '$web' --account-name texttrek --source ./web/dist
+  

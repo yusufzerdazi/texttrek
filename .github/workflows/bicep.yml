@@ -1,5 +1,10 @@
-on: [push]
-name: Bicep
+on:
+  push:
+    paths:
+    - bicep
+
+name: infrastructure
+
 jobs:
   provision:
     runs-on: ubuntu-latest

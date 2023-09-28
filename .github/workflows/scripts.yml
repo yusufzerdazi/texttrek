@@ -1,9 +1,9 @@
-name: Scheduled Scripts
+name: scripts
 
 on:
   # schedule:
   #   - cron:  '0 10,22 * * *'
-
+  
   workflow_dispatch:
 
 jobs:
