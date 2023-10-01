@@ -2,6 +2,10 @@ import os
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 import openai
 import requests
+import json
+from dotenv import load_dotenv
+
+load_dotenv()
 
 root_path = os.environ["ROOT_PATH"]
 openai.organization = os.environ["OPEN_AI_ORGANIZATION"]
@@ -16,14 +20,19 @@ if not container_client.exists():
 blobs = [b for b in container_client.list_blobs()]
 blobs.sort(key=lambda x: x.name)
 folders = list({blob.name.split("/")[0] for blob in blobs})
-if folders == []:
+if len(folders) == 0:
   trek = "000"
   next_index = "000"
 else:
   trek = folders[-1]
-  current_trek = [b for b in blobs if b.name.startswith(trek) and b.name.endswith(".txt") and not b.name.endswith("summary.txt")][-1]
-  trek_index = current_trek.name.split("/")[-1].split(".")[0]
-  next_index = str(int('9' + trek_index) + 1)[1:]
+  current_trek = [b for b in blobs if b.name.startswith(trek) and b.name.endswith(".txt") and not b.name.endswith("summary.txt")]
+  print(current_trek)  
+  if len(current_trek) == 0:
+    trek_index = "000"
+    next_index = "000"
+  else:
+    trek_index = current_trek.name.split("/")[-1].split(".")[0]
+    next_index = str(int('9' + trek_index) + 1)[1:]
 
 # Get latest prompts & votes from blob storage (or initial prompt)
 
@@ -32,13 +41,16 @@ else:
 # Combine latest prompts with previous prompts into a single command
 
 # Generate next section of the story
-text_input = "Eat the goblin corpse"
+votes = json.loads(container_client.download_blob(trek + "/votes.json").content_as_text())
+votes["options"].sort(key=lambda x: len(x.votes), reverse=True)
+vote = votes["options"][0]
+
 if next_index == "000":
   prompt = open(f"{root_path}/scripts/templates/initial.txt", "r").read()
 else:
   prompt = (open(f"{root_path}/scripts/templates/continuation.txt", "r").read()
     .replace("{{story}}", container_client.download_blob(current_trek).content_as_text())
-    .replace("{{command}}", text_input)
+    .replace("{{command}}", vote["option"])
   )
 
 prompt_result = openai.ChatCompletion.create(
@@ -66,3 +78,4 @@ image = requests.get(images.data[0].url)
 
 # Download image and save to blob storage
 container_client.upload_blob(trek + "/" + f"{next_index}.png", image.content)
+container_client.upload_blob(trek + "/votes.json", "{\"options\":[]}", overwrite=True)

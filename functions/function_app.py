@@ -11,16 +11,10 @@ container_client = blob_service_client.get_container_client(container="treks")
 if not container_client.exists():
     container_client.create_container()
 
-blobs = [b for b in container_client.list_blobs()]
-blobs.sort(key=lambda x: x.name)
-folders = list({blob.name.split("/")[0] for blob in blobs})
-trek = folders[-1]
-current_trek = [b for b in blobs if b.name.startswith(trek) and b.name.endswith(".txt") and not b.name.endswith("summary.txt")][-1]
-trek_index = current_trek.name.split("/")[-1].split(".")[0]
-
 @app.function_name(name="add")
 @app.route(route="add")
 def main(req):
+    trek = req.params.get("trek")
     votes_blob = container_client.get_blob_client(trek + "/votes.json")
     if not votes_blob.exists():
         votes_blob.upload_blob("{\"options\":[]}")
@@ -37,6 +31,7 @@ def main(req):
 @app.function_name(name="get")
 @app.route(route="get")
 def main(req):
+    trek = req.params.get("trek")
     votes_blob = container_client.get_blob_client(trek + "/votes.json")
     if not votes_blob.exists():
         votes_blob.upload_blob("{\"options\":{}}")
@@ -47,6 +42,7 @@ def main(req):
 @app.function_name(name="vote")
 @app.route(route="vote")
 def main(req):
+    trek = req.params.get("trek")
     votes_blob = container_client.get_blob_client(trek + "/votes.json")
     if not votes_blob.exists():
         votes_blob.upload_blob("{\"options\":[]}")
