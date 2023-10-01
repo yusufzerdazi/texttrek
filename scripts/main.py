@@ -46,7 +46,7 @@ votes = json.loads(container_client.download_blob(trek + "/votes.json").content_
 votes["options"].sort(key=lambda x: len(x['votes']), reverse=True)
 vote = votes["options"][0]
 
-print(next_index)
+# Story
 if next_index == "000":
   prompt = (open(f"{root_path}/scripts/templates/initial.txt", "r").read()
     .replace("{{initial}}", vote["option"]))
@@ -64,30 +64,40 @@ container_client.upload_blob(trek + "/" + f"{next_index}.txt", prompt_result.cho
 
 # Check if the story has reached a conclusion, if so end it
 
-# Generate accompanying image
+# Image
 current_story = container_client.download_blob(current_trek).content_as_text()
-summary_result = openai.ChatCompletion.create(
+image_summary_result = openai.ChatCompletion.create(
   model="gpt-4",
   messages=[{"role": "user", "content": open(f"{root_path}/scripts/templates/image.txt", "r").read().replace("{{prompt}}", current_story)}]
 )
-container_client.upload_blob(trek + "/" + f"{next_index}_summary.txt", summary_result.choices[0].message.content)
+container_client.upload_blob(trek + "/" + f"{next_index}_summary.txt", image_summary_result.choices[0].message.content)
 
 images = openai.Image.create(
-    prompt=summary_result.choices[0].message.content,
+    prompt=image_summary_result.choices[0].message.content,
     n=1,
     size="1024x1024"
 )
-
 image = requests.get(images.data[0].url)
-
-# Download image and save to blob storage
 container_client.upload_blob(trek + "/" + f"{next_index}.png", image.content)
 
+# Summary
+if container_client.get_blob_client("summary.txt").exists():
+  summary_text = container_client.download_blob("summary.txt").content_as_text()
+else:
+  summary_text = ""
+
+summary_result = openai.ChatCompletion.create(
+  model="gpt-4",
+  messages=[{"role": "user", "content": (open(f"{root_path}/scripts/templates/summary.txt", "r").read()
+    .replace("{{summary}}", summary_text)
+    .replace("{{new}}", current_story))}]
+)
+container_client.upload_blob(trek + "/" + f"summary.txt", summary_result.choices[0].message.content)
+
+# Options
 options_result = openai.ChatCompletion.create(
   model="gpt-4",
   messages=[{"role": "user", "content": open(f"{root_path}/scripts/templates/options.txt", "r").read().replace("{{story}}", current_story)}]
 )
-
-options = options_result.choices[0].message.content.split("\n");
-
+options = [o for o in options_result.choices[0].message.content.split("\n") if o != ""]
 container_client.upload_blob(trek + "/votes.json", json.dumps({"options":[{"option": o, "votes": [], "created_by": "system"} for o in options]}), overwrite=True)

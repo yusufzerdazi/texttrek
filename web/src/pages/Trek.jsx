@@ -87,8 +87,8 @@ class Trek extends Component {
         {this.state.votes ? this.state.votes.map(v => 
 
         <div className='grid grid-cols-6 gap-0 pb-5'>
-          <div className='shadow-xl italic indent-4  bg-teal-100 p-2 rounded-l-2xl col-span-4'>{v.option}</div>
-          <div className='shadow-xl text-center bg-green-200 p-2 col-span-1'><b>Votes: </b>{v.votes}</div>
+          <div className='shadow-xl italic bg-teal-100 p-5 rounded-l-2xl col-span-4'>{v.option}</div>
+          <div className='shadow-xl text-center bg-green-200 p-5 col-span-1'><b>Votes: </b>{v.votes}</div>
           <button className="shadow-xl btn btn-blue col-span-1" onClick={() => this.voteForOption(v.option)}>Vote</button>
         </div>
         ) : <></>}

@@ -1,1 +1,9 @@
-Generate a story summary, in the form of a list of
+Extend and filter the story summary below, in the form of a list of important events, people, places, items (and anything else judged important) in chronological order. Only aspects vital to understand the progress of the story should be included and they should not be numbered. The summary so far is:
+---
+{{summary}}
+---
+
+And this is what had just happened:
+---
+{{new}}
+---
