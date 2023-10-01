@@ -1,6 +1,7 @@
 import { XMLParser } from 'fast-xml-parser';
 import React, { Component } from 'react';
 import withRouter from '../functions/withRouter';
+import { Link } from "react-router-dom";
 
 class Trek extends Component {
     constructor(props){
@@ -19,18 +20,18 @@ class Trek extends Component {
         .then(res => res.text())
         .then(text => new XMLParser().parse(text).EnumerationResults.Blobs.Blob)
         .then(blobs => {
-          this.setState({trek: blobs});
+          this.setState({trek: Array.isArray(blobs) ? blobs : [blobs]});
           blobs.filter(blob => !blob.Name.endsWith("summary.txt") && blob.Name.endsWith(".txt")).map(blob => fetch(blob.Url)
             .then(res => res.text())
             .then(text => this.setState({[blob.Name]: text})))
         });
-      fetch(`https://texttrek.azurewebsites.net/api/get?trek=${trekId}&code=6-41OE76Gc55lz7CzSvZDbEgl4AZ57NtNTKom0L46EmgAzFuT4Qrbw==`)
+      fetch(`https://texttrek.azurewebsites.net/api/get?trek=${this.state.trekId}&code=6-41OE76Gc55lz7CzSvZDbEgl4AZ57NtNTKom0L46EmgAzFuT4Qrbw==`)
         .then(res => res.json())
         .then(votes => this.setState({votes: votes}));
     }
 
     addOption() {
-      fetch(`https://texttrek.azurewebsites.net/api/add?trek=${trekId}&code=Tc0wVgJLyF2qWwP_28jQDKmXHweUNmqLPWSWeqDYPk-pAzFumYHhHg==`, {
+      fetch(`https://texttrek.azurewebsites.net/api/add?trek=${this.state.trekId}&code=Tc0wVgJLyF2qWwP_28jQDKmXHweUNmqLPWSWeqDYPk-pAzFumYHhHg==`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,7 +48,7 @@ class Trek extends Component {
     }
 
     voteForOption(option){
-      fetch(`https://texttrek.azurewebsites.net/api/vote?trek=${trekId}&code=fo3t-iTERsxIBAyW48q90lipinQ52NbfPYThshOdmrTPAzFuA4f8PQ==`, {
+      fetch(`https://texttrek.azurewebsites.net/api/vote?trek=${this.state.trekId}&code=fo3t-iTERsxIBAyW48q90lipinQ52NbfPYThshOdmrTPAzFuA4f8PQ==`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,9 +66,11 @@ class Trek extends Component {
   
     render() {
       return <div className="container mx-auto items-center max-w-4xl pb-5" >
-        <h1 className="text-3xl font-bold text-center p-5 pb-0">
-          Text Trek <i className='far fa-swords'></i>
-        </h1>
+        <Link to="/">
+          <h1 className="text-3xl font-bold text-center p-5 pb-0">
+            Text Trek <i className='far fa-swords'></i>
+          </h1>
+        </Link>
         <div className='mb-5'>
         { this.state.trek ? this.state.trek.map(trek => {
           if(trek.Name.endsWith(".png")){

@@ -24,13 +24,14 @@ if len(folders) == 0:
   trek = "000"
   next_index = "000"
 else:
-  trek = folders[-1]
-  current_trek = [b for b in blobs if b.name.startswith(trek) and b.name.endswith(".txt") and not b.name.endswith("summary.txt")]
-  print(current_trek)  
-  if len(current_trek) == 0:
+  trek = max(folders)
+  current_treks = [b for b in blobs if b.name.startswith(trek) and b.name.endswith(".txt") and not b.name.endswith("summary.txt")]
+  if len(current_treks) == 0:
+    current_trek = trek + "/000.txt"
     trek_index = "000"
     next_index = "000"
   else:
+    current_trek = current_treks[-1]
     trek_index = current_trek.name.split("/")[-1].split(".")[0]
     next_index = str(int('9' + trek_index) + 1)[1:]
 
@@ -42,11 +43,13 @@ else:
 
 # Generate next section of the story
 votes = json.loads(container_client.download_blob(trek + "/votes.json").content_as_text())
-votes["options"].sort(key=lambda x: len(x.votes), reverse=True)
+votes["options"].sort(key=lambda x: len(x['votes']), reverse=True)
 vote = votes["options"][0]
 
+print(next_index)
 if next_index == "000":
-  prompt = open(f"{root_path}/scripts/templates/initial.txt", "r").read()
+  prompt = (open(f"{root_path}/scripts/templates/initial.txt", "r").read()
+    .replace("{{initial}}", vote["option"]))
 else:
   prompt = (open(f"{root_path}/scripts/templates/continuation.txt", "r").read()
     .replace("{{story}}", container_client.download_blob(current_trek).content_as_text())
