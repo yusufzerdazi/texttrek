@@ -4,7 +4,7 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 import json
 
 app = func.FunctionApp()
-header_key = "User-Agent"
+header_key = "X-Forwarded-For"
 
 blob_service_client = BlobServiceClient.from_connection_string(os.environ["BLOB_CONNECTION_STRING"])
 container_client = blob_service_client.get_container_client(container="treks")
