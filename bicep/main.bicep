@@ -53,6 +53,12 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
     serverFarmId: hostingPlan.id
     siteConfig: {
       linuxFxVersion: 'Python|3.11'
+      cors: {
+        allowedOrigins:[
+          'http://localhost:5173'
+          'https://texttrek.z16.web.core.windows.net'
+        ]
+      }
       appSettings: [
         {
           name: 'AzureWebJobsStorage'
