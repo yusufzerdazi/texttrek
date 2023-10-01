@@ -1,5 +1,10 @@
 Generate a continuation of the user driven text based adventure story summarised below. The continuation should be a few sentences long.
 ---
+{{summary}}
+---
+
+The most recent story segment
+---
 {{story}}
 ---
 

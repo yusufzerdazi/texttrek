@@ -52,7 +52,8 @@ if next_index == "000":
     .replace("{{initial}}", vote["option"]))
 else:
   prompt = (open(f"{root_path}/scripts/templates/continuation.txt", "r").read()
-    .replace("{{story}}", container_client.download_blob(trek + "/summary.txt").content_as_text())
+    .replace("{{summary}}", container_client.download_blob(trek + "/summary.txt").content_as_text())
+    .replace("{{story}}", container_client.download_blob(current_trek).content_as_text())
     .replace("{{command}}", vote["option"])
   )
 
