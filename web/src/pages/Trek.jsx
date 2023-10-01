@@ -20,6 +20,9 @@ class Trek extends Component {
         .then(res => res.text())
         .then(text => new XMLParser().parse(text).EnumerationResults.Blobs.Blob)
         .then(blobs => {
+          if(!blobs) {
+            return;
+          }
           this.setState({trek: Array.isArray(blobs) ? blobs : [blobs]});
           blobs.filter(blob => !blob.Name.endsWith("summary.txt") && blob.Name.endsWith(".txt")).map(blob => fetch(blob.Url)
             .then(res => res.text())
