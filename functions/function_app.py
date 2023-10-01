@@ -37,7 +37,7 @@ def main(req):
     trek = req.params.get("trek")
     votes_blob = container_client.get_blob_client(trek + "/votes.json")
     if not votes_blob.exists():
-        votes_blob.upload_blob("{\"options\":{}}")
+        return func.HttpResponse("{\"options\":[]}")
     votes = json.loads(container_client.download_blob(trek + "/votes.json").content_as_text())
     return func.HttpResponse(json.dumps([{"option": option["option"], "votes": len(option["votes"])} for option in votes['options']]),
         mimetype="application/json")
@@ -48,7 +48,7 @@ def main(req):
     trek = req.params.get("trek")
     votes_blob = container_client.get_blob_client(trek + "/votes.json")
     if not votes_blob.exists():
-        votes_blob.upload_blob("{\"options\":[]}")
+        return func.HttpResponse("Option does not exist.", status_code=400)
     votes = json.loads(container_client.download_blob(trek + "/votes.json").content_as_text())
     body = json.loads(req.get_body())
     if(body['option'] not in [option['option'] for option in votes['options']]):
