@@ -65,9 +65,10 @@ container_client.upload_blob(trek + "/" + f"{next_index}.txt", prompt_result.cho
 # Check if the story has reached a conclusion, if so end it
 
 # Generate accompanying image
+current_story = container_client.download_blob(current_trek).content_as_text()
 summary_result = openai.ChatCompletion.create(
   model="gpt-4",
-  messages=[{"role": "user", "content": open(f"{root_path}/scripts/templates/image.txt", "r").read().replace("{{prompt}}", container_client.download_blob(current_trek).content_as_text())}]
+  messages=[{"role": "user", "content": open(f"{root_path}/scripts/templates/image.txt", "r").read().replace("{{prompt}}", current_story)}]
 )
 container_client.upload_blob(trek + "/" + f"{next_index}_summary.txt", summary_result.choices[0].message.content)
 
@@ -81,4 +82,12 @@ image = requests.get(images.data[0].url)
 
 # Download image and save to blob storage
 container_client.upload_blob(trek + "/" + f"{next_index}.png", image.content)
-container_client.upload_blob(trek + "/votes.json", "{\"options\":[]}", overwrite=True)
+
+options_result = openai.ChatCompletion.create(
+  model="gpt-4",
+  messages=[{"role": "user", "content": open(f"{root_path}/scripts/templates/options.txt", "r").read().replace("{{story}}", current_story)}]
+)
+
+options = options_result.choices[0].message.content.split("\n");
+
+container_client.upload_blob(trek + "/votes.json", json.dumps({"options":[{"option": o, "votes": [], "created_by": "system"} for o in options]}), overwrite=True)

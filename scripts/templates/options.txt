@@ -1,0 +1,3 @@
+Based on the section of story below, come up with three potential options for the character to take next. The options should be separated on new lines.
+---
+{{story}}

@@ -11,6 +11,9 @@ container_client = blob_service_client.get_container_client(container="treks")
 if not container_client.exists():
     container_client.create_container()
 
+def get_ip_from_header(headers):
+    return headers[header_key].split(":")[0]
+
 @app.function_name(name="add")
 @app.route(route="add")
 def main(req):
@@ -22,9 +25,9 @@ def main(req):
     body = json.loads(req.get_body())
     if(body['option'] in [option['option'] for option in votes['options']]):
         return func.HttpResponse("Option already exists.", status_code=400)
-    if(req.headers[header_key] in [option['created_by'] for option in votes['options']]):
+    if(get_ip_from_header(req.headers) in [option['created_by'] for option in votes['options']]):
         return func.HttpResponse("User already suggested an option.", status_code=400)
-    votes['options'].append({"option": body['option'], "created_by": req.headers[header_key], "votes": []})
+    votes['options'].append({"option": body['option'], "created_by": get_ip_from_header(req.headers), "votes": []})
     votes_blob.upload_blob(json.dumps(votes), overwrite=True)
     return func.HttpResponse("OK")
 
@@ -50,11 +53,11 @@ def main(req):
     body = json.loads(req.get_body())
     if(body['option'] not in [option['option'] for option in votes['options']]):
         return func.HttpResponse("Option does not exist.", status_code=400)
-    if(req.headers[header_key] in [user for v in [option['votes'] for option in votes['options']] for user in v]):
+    if(get_ip_from_header(req.headers) in [user for v in [option['votes'] for option in votes['options']] for user in v]):
         return func.HttpResponse("User already voted.", status_code=400)
     for vote in votes['options']:
         if vote['option'] == body['option']:
-            vote['votes'].append(req.headers[header_key])
+            vote['votes'].append(get_ip_from_header(req.headers))
     votes_blob.upload_blob(json.dumps(votes), overwrite=True)
     return func.HttpResponse("OK")
 
