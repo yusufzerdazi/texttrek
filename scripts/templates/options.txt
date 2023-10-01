@@ -1,3 +1,9 @@
-Based on the section of story below, come up with three potential options for the character to take next. The options should be separated on new lines, a single sentence each and not numbered.
+Based on the summary, and section of story below, come up with three potential options for the character to take next. The options should be separated on new lines, a single sentence each and not numbered.
 ---
 {{story}}
+---
+
+A summary of the story so far:
+---
+{{summary}}
+---

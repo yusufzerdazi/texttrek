@@ -52,7 +52,7 @@ if next_index == "000":
     .replace("{{initial}}", vote["option"]))
 else:
   prompt = (open(f"{root_path}/scripts/templates/continuation.txt", "r").read()
-    .replace("{{story}}", container_client.download_blob(current_trek).content_as_text())
+    .replace("{{story}}", container_client.download_blob(trek + "/summary.txt").content_as_text())
     .replace("{{command}}", vote["option"])
   )
 
@@ -92,12 +92,14 @@ summary_result = openai.ChatCompletion.create(
     .replace("{{summary}}", summary_text)
     .replace("{{new}}", current_story))}]
 )
-container_client.upload_blob(trek + "/" + f"summary.txt", summary_result.choices[0].message.content)
+container_client.upload_blob(trek + "/" + f"summary.txt", summary_result.choices[0].message.content, overwrite=True)
 
 # Options
 options_result = openai.ChatCompletion.create(
   model="gpt-4",
-  messages=[{"role": "user", "content": open(f"{root_path}/scripts/templates/options.txt", "r").read().replace("{{story}}", current_story)}]
+  messages=[{"role": "user", "content": (open(f"{root_path}/scripts/templates/options.txt", "r").read()
+    .replace("{{story}}", current_story)
+    .replace("{{summary}}", summary_text))}]
 )
 options = [o for o in options_result.choices[0].message.content.split("\n") if o != ""]
 container_client.upload_blob(trek + "/votes.json", json.dumps({"options":[{"option": o, "votes": [], "created_by": "system"} for o in options]}), overwrite=True)
