@@ -1,4 +1,4 @@
-Generate a continuation of the user driven text based adventure story summarised below. The continuation should be a few sentences long and written from the first person.
+Generate a continuation of the user driven text based adventure story summarised below. The continuation should be a few sentences long and written from the second person.
 ---
 {{summary}}
 ---
