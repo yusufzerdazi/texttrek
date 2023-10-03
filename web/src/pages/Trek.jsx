@@ -87,7 +87,7 @@ class Trek extends Component {
           }
         }) : <></> }
         </div>
-        {this.state.votes ? this.state.votes.map(v => 
+        {Array.isArray(this.state.votes) ? this.state.votes.map(v => 
 
         <div className='grid grid-cols-6 gap-0 pb-5'>
           <div className='shadow-xl italic bg-teal-100 p-5 rounded-l-2xl col-span-4'>{v.option}</div>
