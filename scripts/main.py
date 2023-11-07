@@ -75,6 +75,7 @@ container_client.upload_blob(trek + "/" + f"{next_index}_summary.txt", image_sum
 
 images = openai.Image.create(
     prompt=image_summary_result.choices[0].message.content,
+    model="dall-e-3",
     n=1,
     size="1024x1024"
 )
