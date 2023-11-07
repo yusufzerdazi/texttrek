@@ -1,6 +1,6 @@
 import os
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
-import openai
+from openai import OpenAI
 import requests
 import json
 from dotenv import load_dotenv
@@ -8,8 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 root_path = os.environ["ROOT_PATH"]
-openai.organization = os.environ["OPEN_AI_ORGANIZATION"]
-openai.api_key = os.environ["OPEN_AI_KEY"]
+client = OpenAI()
 
 blob_service_client = BlobServiceClient.from_connection_string(os.environ["BLOB_CONNECTION_STRING"])
 
@@ -57,7 +56,7 @@ else:
     .replace("{{command}}", vote["option"])
   )
 
-prompt_result = openai.ChatCompletion.create(
+prompt_result = client.chat.completions.create(
   model="gpt-4",
   messages=[{"role": "user", "content": prompt}]
 )
@@ -67,13 +66,13 @@ container_client.upload_blob(trek + "/" + f"{next_index}.txt", prompt_result.cho
 
 # Image
 current_story = container_client.download_blob(current_trek).content_as_text()
-image_summary_result = openai.ChatCompletion.create(
+image_summary_result = client.chat.completions.create(
   model="gpt-4",
   messages=[{"role": "user", "content": open(f"{root_path}/scripts/templates/image.txt", "r").read().replace("{{prompt}}", current_story)}]
 )
 container_client.upload_blob(trek + "/" + f"{next_index}_summary.txt", image_summary_result.choices[0].message.content)
 
-images = openai.Image.create(
+images = client.images.generate(
     prompt=image_summary_result.choices[0].message.content,
     model="dall-e-3",
     n=1,
@@ -88,7 +87,7 @@ if container_client.get_blob_client("summary.txt").exists():
 else:
   summary_text = ""
 
-summary_result = openai.ChatCompletion.create(
+summary_result = client.chat.completions.create(
   model="gpt-4",
   messages=[{"role": "user", "content": (open(f"{root_path}/scripts/templates/summary.txt", "r").read()
     .replace("{{summary}}", summary_text)
@@ -97,7 +96,7 @@ summary_result = openai.ChatCompletion.create(
 container_client.upload_blob(trek + "/" + f"summary.txt", summary_result.choices[0].message.content, overwrite=True)
 
 # Options
-options_result = openai.ChatCompletion.create(
+options_result = client.chat.completions.create(
   model="gpt-4",
   messages=[{"role": "user", "content": (open(f"{root_path}/scripts/templates/options.txt", "r").read()
     .replace("{{story}}", current_story)
