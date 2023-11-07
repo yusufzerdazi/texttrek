@@ -8,7 +8,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 root_path = os.environ["ROOT_PATH"]
-client = OpenAI()
+client = OpenAI(
+    api_key=os.environ.get("OPEN_AI_KEY")
+)
 
 blob_service_client = BlobServiceClient.from_connection_string(os.environ["BLOB_CONNECTION_STRING"])
 
