@@ -28,8 +28,8 @@ class Home extends Component {
   
     render() {
       return <div className="container mx-auto items-center max-w-4xl pb-5" >
-        <h1 className="text-3xl font-bold text-center p-5">
-          Text Trek <i className='far fa-swords'></i>
+        <h1 className="text-3xl font-bold center p-5">
+          <img className="mix-blend-darken m-auto invert" width="150px" src="./texttrek.jpg"></img>
         </h1>
         <p className='italic text-center'>Text Trek is a community-based, AI driven text based adventure game. Imagine huge persistent worlds spanning centuries, characters finding artifacts from past generations, and thrilling open-ended plotlines with atmospheric artwork. It's not there yet, but it's still pretty cool.</p>
         <div className='mt-5 mb-5 grid grid-cols-3 gap-4'>
