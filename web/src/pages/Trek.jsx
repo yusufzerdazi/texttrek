@@ -101,11 +101,11 @@ class Trek extends Component {
   render() {
     var totalVotes = this.getTotalVotes();
     return (
-      <div className="container mx-auto max-w-4xl my-10">
+      <div className="container mx-auto max-w-4xl mb-5">
         <Link to="/">
-          <div className="text-center mb-10">
-            <img className="mix-blend-darken m-auto invert" width="150px" src="./texttrek.jpg" alt="Text Trek" />
-          </div>
+          <h1 className="text-3xl font-bold center p-5">
+            <img className="mix-blend-darken m-auto invert hover:opacity-80" width="150px" src="./texttrek.jpg"></img>
+          </h1>
         </Link>
 
 
