@@ -1,5 +1,5 @@
 {
-    "python.defaultInterpreterPath": "C:\\Code\\texttrek\\scripts\\.venv\\Scripts",
+    "python.defaultInterpreterPath": "C:\\Code\\texttrek\\functions\\.venv\\Scripts",
     "css.lint.unknownAtRules": "ignore",
     "files.exclude": {
         "obj": true,
@@ -11,5 +11,5 @@
     "azureFunctions.projectRuntime": "~2",
     "debug.internalConsoleOptions": "neverOpen",
     "azureFunctions.preDeployTask": "func: extensions install",
-    "azureFunctions.pythonVenv": ".venv"
+    "azureFunctions.pythonVenv": "./functions/.venv"
 }

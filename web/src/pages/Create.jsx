@@ -5,32 +5,6 @@ import { Link } from "react-router-dom";
 import StoryV1 from './StoryV1';
 import StoryV2 from './StoryV2';
 
-const VoteOption = ({ option, votes, totalVotes, onVote }) => {
-  const percentage = totalVotes ? Math.round((votes / totalVotes) * 100) : 0;
-
-  return (
-    <div className='pb-5 '>
-      <div className="flex items-stretch">
-        <div className="bg-white flex-grow p-3">
-          <p className="m-0">{option}</p>
-        </div>
-        <button
-          onClick={() => onVote(option)}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 self-stretch flex items-center justify-center"
-        >
-          Vote
-        </button>
-      </div>
-      <div className="w-full text-white bg-gray-200 dark:bg-gray-700 shadow-lg">
-        <div
-          className="bg-green-600 h-3"
-          style={{ width: `${percentage}%` }}>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 class Trek extends Component {
   constructor(props) {
     super(props);
@@ -129,4 +103,4 @@ class Trek extends Component {
   }
 }
 
-export default withRouter(Trek);
+export default withRouter(Create);

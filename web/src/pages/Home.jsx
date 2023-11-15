@@ -19,7 +19,7 @@ class Home extends Component {
         .then(blobs => {
           var treks = [...new Set(blobs.map(b => b.Name.split("/")[0]))]
           console.log(treks);
-          this.setState({treks: blobs.filter(b => treks.some(t => b.Name.startsWith(t)) && b.Name.endsWith("000.png"))});
+          this.setState({treks: blobs.filter(b => treks.some(t => b.Name.startsWith(t)) && (b.Name.endsWith("000.png") || b.Name.endsWith("000.jpeg")))});
           // blobs.filter(blob => !blob.Name.endsWith("summary.txt") && blob.Name.endsWith(".txt")).map(blob => fetch(blob.Url)
           //   .then(res => res.text())
           //   .then(text => this.setState({[blob.Name]: text})))

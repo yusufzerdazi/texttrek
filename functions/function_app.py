@@ -61,3 +61,9 @@ def main(req):
     votes_blob.upload_blob(json.dumps(votes), overwrite=True)
     return func.HttpResponse("OK")
 
+@app.function_name(name="schedule")
+@app.schedule(schedule="0 */5 * * * *", 
+              arg_name="mytimer",
+              run_on_startup=True)
+def schedule(mytimer: func.TimerRequest) -> None:
+    votes = [blob for container_client.list_blob_names() if blob.
