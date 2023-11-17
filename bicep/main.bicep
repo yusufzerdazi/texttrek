@@ -60,6 +60,7 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
         allowedOrigins:[
           'http://localhost:5173'
           'https://texttrek.z16.web.core.windows.net'
+          'https://portal.azure.com'
         ]
       }
       appSettings: [
@@ -95,10 +96,24 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
           name: 'FUNCTIONS_WORKER_RUNTIME'
           value: 'python'
         }
+        {
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: applicationInsights.properties.InstrumentationKey
+        }
       ]
       ftpsState: 'FtpsOnly'
       minTlsVersion: '1.2'
     }
     httpsOnly: true
+  }
+}
+
+resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: 'texttrek'
+  location: resourceGroup().location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    Request_Source: 'rest'
   }
 }

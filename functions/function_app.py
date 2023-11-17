@@ -129,7 +129,7 @@ def main(req):
 @app.function_name(name="schedule")
 @app.schedule(schedule="0 12 * * * *", 
               arg_name="timer",
-              run_on_startup=True)
+              run_on_startup=False)
 def schedule(timer: func.TimerRequest) -> None:
     vote_blobs = [blob for blob in container_client.list_blobs() if blob.name.endswith("votes.json") and blob.name[:3] >= versions["V2"]]
     votes = [json.loads(container_client.download_blob(blob.name).content_as_text()) for blob in vote_blobs]
