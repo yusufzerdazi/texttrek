@@ -1,4 +1,7 @@
 __azurite*
+__blobstorage__
+__queuestorage__
+__tablestorage__
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

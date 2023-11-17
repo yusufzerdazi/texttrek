@@ -1,4 +1,0 @@
-Summarise this into a concise prompt for an accompanying artwork. The prompt should not include anything unsuitable for AI image generation request.
----
-{{prompt}}
----
