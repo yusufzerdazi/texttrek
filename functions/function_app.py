@@ -2,9 +2,19 @@ import os
 import azure.functions as func
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 import json
+from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = func.FunctionApp()
+client = OpenAI(
+    api_key=os.environ.get("OPEN_AI_KEY")
+)
 header_key = "X-Forwarded-For"
+versions = {
+    "V2": "005"
+}
 
 blob_service_client = BlobServiceClient.from_connection_string(os.environ["BLOB_CONNECTION_STRING"])
 container_client = blob_service_client.get_container_client(container="treks")
@@ -62,8 +72,18 @@ def main(req):
     return func.HttpResponse("OK")
 
 @app.function_name(name="schedule")
-@app.schedule(schedule="0 */5 * * * *", 
+@app.schedule(schedule="0 12 * * * *", 
               arg_name="mytimer",
               run_on_startup=True)
 def schedule(mytimer: func.TimerRequest) -> None:
-    votes = [blob for container_client.list_blob_names() if blob.
+    vote_blobs = [blob for blob in container_client.list_blobs() if blob.endswith("votes.json") and blob.name[:3] >= versions["V2"]]
+    votes = [json.loads(container_client.download_blob(blob.name).content_as_text()) for blob in vote_blobs]
+    for i in range(len(votes)):
+        vote["trek"] = vote_blobs[i].name[:3]
+    users_have_voted = [v for v in votes if [o for o in v['options'] if o['votes']]]
+    for vote in users_have_voted:
+        extend_story(vote)
+
+def extend_story(vote):
+    story = sorted([blob for blob in container_client.list_blob_names(vote["trek"]) if blob.name.endswith(".txt")])
+    print(story)
