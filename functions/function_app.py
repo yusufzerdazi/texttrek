@@ -141,7 +141,7 @@ def schedule(timer: func.TimerRequest) -> None:
         extend_story(vote)
 
 def extend_story(vote):
-    story = sorted([blob for blob in container_client.list_blobs(vote["trek"]) if blob.name.endswith(".txt")])
+    story = sorted([blob for blob in container_client.list_blobs(vote["trek"]) if blob.name.endswith(".txt")], key=lambda b: b.name)
     downloaded = [json.loads(container_client.download_blob(s.name).content_as_text()) for s in story]
     
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
