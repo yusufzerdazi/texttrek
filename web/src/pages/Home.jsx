@@ -17,9 +17,8 @@ class Home extends Component {
         .then(res => res.text())
         .then(text => new XMLParser().parse(text).EnumerationResults.Blobs.Blob)
         .then(blobs => {
-          var treks = [...new Set(blobs.map(b => b.Name.split("/")[0]))]
-          console.log(treks);
-          this.setState({treks: blobs.filter(b => treks.some(t => b.Name.startsWith(t)) && b.Name.endsWith("000.png"))});
+          var treks = [...new Set(blobs.map(b => b.Name.split("/")[0]))];
+          this.setState({treks: blobs.filter(b => treks.some(t => b.Name.startsWith(t)) && (b.Name.endsWith("000.png") || b.Name.endsWith("000.jpeg"))).reverse()});
           // blobs.filter(blob => !blob.Name.endsWith("summary.txt") && blob.Name.endsWith(".txt")).map(blob => fetch(blob.Url)
           //   .then(res => res.text())
           //   .then(text => this.setState({[blob.Name]: text})))

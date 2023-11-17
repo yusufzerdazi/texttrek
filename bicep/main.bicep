@@ -1,3 +1,6 @@
+
+param openAiKey string
+
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-02-01' = {
   name: 'texttrek'
   location: resourceGroup().location
@@ -67,6 +70,10 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
         {
           name: 'BLOB_CONNECTION_STRING'
           value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
+        }
+        {
+          name: 'OPEN_AI_KEY'
+          value: '${openAiKey}'
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'

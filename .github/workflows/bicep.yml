@@ -27,6 +27,7 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: texttrek
         template: ./bicep/main.bicep
+        parameters: 'openAiKey=${{ secrets.OPEN_AI_KEY }}'
         failOnStdErr: false
       
     - name: Azure CLI script

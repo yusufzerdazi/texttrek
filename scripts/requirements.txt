@@ -1,4 +1,0 @@
-﻿azure-storage-blob
-openai
-requests
-python-dotenv
