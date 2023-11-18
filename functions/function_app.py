@@ -66,7 +66,7 @@ Description: Return a JSON response in the following format, with no comments or
     ]
   },
   "options": [
-    <a list of 3 possible next actions>
+    <a list of 3 possible next actions, if the story hasn't ended>
   ],
   "danger": "<a number up to 10 representing the current danger level of the situation>",
   "end": "<true or false depending if the story has reached a conclusion yet>",
@@ -129,6 +129,40 @@ def main(req):
         if vote['option'] == body['option']:
             vote['votes'].append(get_ip_from_header(req.headers))
     votes_blob.upload_blob(json.dumps(votes), overwrite=True)
+    return func.HttpResponse("OK")
+
+@app.function_name(name="create")
+@app.route(route="create")
+def main(req):
+    vote_blobs = [blob for blob in container_client.list_blobs() if blob.name.endswith("votes.json") and blob.name[:3] >= versions["V2"]]
+    if(len(vote_blobs) >= 3):
+        return func.HttpResponse("There are already the maximum number of treks in progress.", status_code=400)
+
+    latest_trek = max([blob[:3] for blob in container_client.list_blob_names()])
+    next_index = str(int('9' + latest_trek) + 1)[1:]
+
+    body = json.loads(req.get_body())
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    messages.append({"role": "user", "content": "generate_world: " + body["prompt"]})
+
+    completion = client.chat.completions.create(
+        model="gpt-4-1106-preview",
+        messages=messages,
+        response_format={ "type": "json_object" }
+    )
+    container_client.upload_blob(next_index + "/000.txt", completion.choices[0].message.content)
+
+    parsed_completion = json.loads(completion.choices[0].message.content)
+    images = client.images.generate(
+        prompt=parsed_completion["image"],
+        model="dall-e-3",
+        n=1,
+        size="1024x1024"
+    )
+    image = requests.get(images.data[0].url)
+    container_client.upload_blob(next_index + "/000.png", image.content)
+    container_client.upload_blob(next_index + "/votes.json", json.dumps({"options":[{"option": o, "votes": [], "created_by": "system"} for o in parsed_completion["options"]]}), overwrite=True)
+
     return func.HttpResponse("OK")
 
 @app.function_name(name="schedule")

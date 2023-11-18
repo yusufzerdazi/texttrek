@@ -21,3 +21,6 @@ h3{
 .input {
     width: calc(100% - 2em)
 }
+.create {
+    min-height: 100px;
+}
