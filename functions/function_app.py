@@ -94,6 +94,8 @@ def main(req):
         return func.HttpResponse("Option already exists.", status_code=400)
     if(get_ip_from_header(req.headers) in [option['created_by'] for option in votes['options']]):
         return func.HttpResponse("User already suggested an option.", status_code=400)
+    if(len(votes['options']) >= 10):
+        return func.HttpResponse("The maximum number of options has been reached.", status_code=400)
     votes['options'].append({"option": body['option'], "created_by": get_ip_from_header(req.headers), "votes": []})
     votes_blob.upload_blob(json.dumps(votes), overwrite=True)
     return func.HttpResponse("OK")

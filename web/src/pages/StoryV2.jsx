@@ -42,8 +42,8 @@ class StoryV2 extends Component {
         return (
             <div className="space-y-5 w-full mb-5">
                 {this.state.trek && this.state.initial ? <>
-                    <h3>{this.state.initial.title}</h3>
-                    <div className="grid grid-cols-6 2xs: 2xl:fixed 2xl:top-5 2xl:left-5 2xl:w-72 bg-white shadow-md z-10">
+                    <h1 className='text-center'>{this.state.initial.title}</h1>
+                    <div className="grid grid-cols-6 2xs: 2xl:fixed 2xl:top-0 2xl:left-5 2xl:w-72 bg-white shadow-md z-10">
                         <div className="p-5 col-span-2 2xl:col-span-6 "><img className='shadow-xl' src={this.state.trek[0]["text"].Url.replace("000.txt", "avatar.jpeg")}></img></div>
                         <div className="py-5 2xl:p-5 2xl:pt-0 pr-5 col-span-4 2xl:col-span-6 ">
                             <p className="text-gray-700 text-lg leading-relaxed"><b>Name: </b>{this.state.initial.character.name}.</p>
@@ -63,16 +63,26 @@ class StoryV2 extends Component {
                             <p className="text-gray-700 text-lg leading-relaxed"><b>Description: </b>{this.state.initial.setting.description}.</p>
                         </div>
                     </div>
+                    
                     {this.state.trek.map((trek, index) => (
-                    this.state[trek["text"].Name] ? <div className={`flex flex-col space-y-3 p-5 bg-white shadow-lg`} key={"" + index}>
-                        <img className="m-auto" src={trek["image"].Url} alt="" />
-                        <div>
-                        {this.state[trek["text"].Name].prompt.split('\n').map((p, i) => (
-                            <p className="text-gray-700 text-lg leading-relaxed" key={"" + i}>{p}</p>
-                        ))}
+                    this.state[trek["text"].Name] ? <div>
+                        {index > 0 ? <div className='relative bg-blue-500 text-white font-bold px-4 py-2 italic'>
+                            <p className="">{this.state[trek["text"].Name].input}</p> <span className={`absolute right-1 top-1`}> <i className={`fa fa-2x ${parseInt(this.state[trek["text"].Name].danger) < 5 ? 'fa-shield-check' : parseInt(this.state[trek["text"].Name].danger) < 8 ? 'fa-shield-alt' : 'fa-shield'}`}></i> {this.state[trek["text"].Name].status == "success" ? 
+                                <i className='fa fa-2x fa-check-circle'></i> : 
+                                <i className='fa fa-2x fa-times-circle'></i>}
+                            </span>
+                        </div> : <></>}
+                        <div className={`flex flex-col space-y-3 p-5 bg-white shadow-lg`} key={"" + index}>
+                            
+                            <img className="m-auto" src={trek["image"].Url} alt="" />
+                            <div>
+                            {this.state[trek["text"].Name].prompt.split('\n').map((p, i) => (
+                                <p className="text-gray-700 text-lg leading-relaxed" key={"" + i}>{p}</p>
+                            ))}
+                            </div>
                         </div>
                     </div> : <></>
-                ))}</> : <></>}
+                    ))}</> : <></>}
             </div>
         );
     }
