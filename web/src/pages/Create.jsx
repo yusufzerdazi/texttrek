@@ -17,7 +17,7 @@ class Create extends Component {
   }
 
   createStory() {
-    fetch(`https://texttrek.azurewebsites.net/api/create?trek=${this.state.trekId}&code=Tc0wVgJLyF2qWwP_28jQDKmXHweUNmqLPWSWeqDYPk-pAzFumYHhHg==`, {
+    fetch(`https://texttrek.azurewebsites.net/api/create?code=z_lDtm4wMjhdJmkFX9robm3944SgBImGlSGOvzA_VyRDAzFuPvMsCA==`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

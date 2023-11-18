@@ -25,8 +25,9 @@ class StoryV2 extends Component {
                 var images = (Array.isArray(blobs) ? blobs : [blobs]).filter(blob => blob.Name.endsWith(".png") || blob.Name.endsWith(".jpeg"));
                 var combined = text
                     .map(b => {return {"text": b, "image": images.filter(x => x.Name.split(".")[0] == b.Name.split(".")[0])[0]}});
-                console.log(combined)
                 this.setState({ trek: combined });
+                this.setState({ avatar: images.filter(x => x.Name.startsWith(this.state.trekId +"/avatar"))[0].Url });
+                this.setState({ setting: images.filter(x => x.Name.startsWith(this.state.trekId +"/setting"))[0].Url });
                 text.map(blob => fetch(blob.Url)
                     .then(res => res.text())
                     .then(text => {
@@ -44,7 +45,7 @@ class StoryV2 extends Component {
                 {this.state.trek && this.state.initial ? <>
                     <h1 className='text-center'>{this.state.initial.title}</h1>
                     <div className="grid grid-cols-6 2xl:fixed 2xl:top-0 2xl:left-5 2xl:w-72 bg-white shadow-md z-10">
-                        <div className="p-5 col-span-6 md:col-span-2 2xl:col-span-6 "><img className='shadow-xl' src={this.state.trek[0]["text"].Url.replace("000.txt", "avatar.jpeg")}></img></div>
+                        <div className="p-5 col-span-6 md:col-span-2 2xl:col-span-6 "><img className='shadow-xl' src={this.state.avatar}></img></div>
                         <div className="py-5 p-5 pt-0 md:pt-5 md:pl-0 2xl:p-5 2xl:pt-0 pr-5 col-span-6 md:col-span-4 2xl:col-span-6 ">
                             <p className="text-gray-700 text-lg leading-relaxed"><b>Name: </b>{this.state.initial.character.name}.</p>
                             <p className="text-gray-700 text-lg leading-relaxed"><b>Age: </b>{this.state.initial.character.age}.</p>
@@ -55,7 +56,7 @@ class StoryV2 extends Component {
                         </div>
                     </div>
                     <div className="grid grid-cols-6  2xl:fixed 2xl:top-0 2xl:right-5 2xl:w-72 bg-white shadow-md z-10">
-                        <div className="p-5 col-span-6 md:col-span-2 2xl:col-span-6"><img className='shadow-xl' src={this.state.trek[0]["text"].Url.replace("000.txt", "setting.jpeg")}></img></div>
+                        <div className="p-5 col-span-6 md:col-span-2 2xl:col-span-6"><img className='shadow-xl' src={this.state.setting}></img></div>
                         <div className="py-5 p-5 pt-0 md:pt-5 md:pl-0 2xl:p-5 2xl:pt-0 pr-5 col-span-6 md:col-span-4 2xl:col-span-6">
                             <p className="text-gray-700 text-lg leading-relaxed"><b>Planet: </b>{this.state.initial.setting.planet}.</p>
                             <p className="text-gray-700 text-lg leading-relaxed"><b>Year: </b>{this.state.initial.setting.year}.</p>

@@ -161,6 +161,25 @@ def main(req):
     )
     image = requests.get(images.data[0].url)
     container_client.upload_blob(next_index + "/000.png", image.content)
+
+    images = client.images.generate(
+        prompt=parsed_completion["character"]["avatar"],
+        model="dall-e-3",
+        n=1,
+        size="1024x1024"
+    )
+    image = requests.get(images.data[0].url)
+    container_client.upload_blob(next_index + "/avatar.png", image.content)
+
+    images = client.images.generate(
+        prompt=parsed_completion["setting"]["description"],
+        model="dall-e-3",
+        n=1,
+        size="1024x1024"
+    )
+    image = requests.get(images.data[0].url)
+    container_client.upload_blob(next_index + "/setting.png", image.content)
+
     container_client.upload_blob(next_index + "/votes.json", json.dumps({"options":[{"option": o, "votes": [], "created_by": "system"} for o in parsed_completion["options"]]}), overwrite=True)
 
     return func.HttpResponse("OK")
