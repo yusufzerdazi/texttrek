@@ -211,4 +211,7 @@ def extend_story(vote):
     )
     image = requests.get(images.data[0].url)
     container_client.upload_blob(vote["trek"] + "/" + f"{next_index}.png", image.content)
-    container_client.upload_blob(vote["trek"] + "/votes.json", json.dumps({"options":[{"option": o, "votes": [], "created_by": "system"} for o in parsed_completion["options"]]}), overwrite=True)
+    if(not parsed_completion["end"]):
+        container_client.upload_blob(vote["trek"] + "/votes.json", json.dumps({"options":[{"option": o, "votes": [], "created_by": "system"} for o in parsed_completion["options"]]}), overwrite=True)
+    else:
+        container_client.delete_blob(vote["trek"] + "/votes.json")
