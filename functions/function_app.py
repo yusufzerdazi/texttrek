@@ -23,6 +23,7 @@ Description: Return a JSON response in the following format. The prompt should b
 {
   "input": "<The prompt inputted by the user>",
   "style": "<The writing style that the story should take>",
+  "title": "<title of the story>"
   "setting": {
     "year": "<year>",
     "planet": "<planet>",
@@ -30,6 +31,7 @@ Description: Return a JSON response in the following format. The prompt should b
     "description": "<description>"
   }
   "character": {
+    "name": "<character name>",
     "health": "<a number out of 100 representing the character's current health>",
     "inventory": [
        <an array of items in the character's inventory>
@@ -127,7 +129,7 @@ def main(req):
     return func.HttpResponse("OK")
 
 @app.function_name(name="schedule")
-@app.schedule(schedule="0 12 * * * *", 
+@app.schedule(schedule="0 0 12 * * *", 
               arg_name="timer",
               run_on_startup=False)
 def schedule(timer: func.TimerRequest) -> None:
