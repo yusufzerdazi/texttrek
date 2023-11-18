@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import StoryV1 from './StoryV1';
 import StoryV2 from './StoryV2';
 
-const VoteOption = ({ option, votes, totalVotes, onVote }) => {
+const VoteOption = ({ option, votes, totalVotes, onVote, colour }) => {
   const percentage = totalVotes ? Math.round((votes / totalVotes) * 100) : 0;
 
   return (
@@ -15,8 +15,9 @@ const VoteOption = ({ option, votes, totalVotes, onVote }) => {
           <p className="m-0">{option}</p>
         </div>
         <button
+          style={colour ? {backgroundColor: colour} : {}}
           onClick={() => onVote(option)}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 self-stretch flex items-center justify-center"
+          className="bg-blue-500 hover:opacity-70 text-white font-bold px-4 self-stretch flex items-center justify-center"
         >
           Vote
         </button>
@@ -48,6 +49,12 @@ class Trek extends Component {
     fetch(`https://texttrek.azurewebsites.net/api/get?trek=${this.state.trekId}&code=6-41OE76Gc55lz7CzSvZDbEgl4AZ57NtNTKom0L46EmgAzFuT4Qrbw==`)
         .then(res => res.json())
         .then(votes => this.setState({ votes: votes }));
+    fetch(`https://texttrek.blob.core.windows.net/treks/${this.state.trekId}/000.txt`)
+        .then(res => res.text())
+        .then(text => {
+            console.log(text)
+            this.setState({ trek: JSON.parse(text) });
+        });
   }
 
   addOption() {
@@ -109,6 +116,7 @@ class Trek extends Component {
             votes={v.votes}
             totalVotes={Math.max(...this.state.votes.map(x => x.votes))}
             onVote={this.voteForOption}
+            colour={this.state.trek?.colour}  
           />
         ))}
 
@@ -122,7 +130,7 @@ class Trek extends Component {
 
         <div className="flex shadow-lg">
           <input className="flex-grow p-2 border border-r-0 border-gray-300" type="text" placeholder="Suggest a new option..." onChange={(ev) => this.setState({ option: ev.currentTarget.value })}/>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline" onClick={this.addOption}>Add</button>
+          <button style={this.state.trek?.colour ? {backgroundColor: this.state.trek?.colour} : {}}  className="bg-blue-500 hover:opacity-70 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline" onClick={this.addOption}>Add</button>
         </div>
       </div>
     );

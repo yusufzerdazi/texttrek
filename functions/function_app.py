@@ -48,7 +48,8 @@ Description: Return a JSON response in the following format. The prompt should b
   ],
   "danger": "<a number up to 10 representing the current danger level of the situation>",
   "prompt": "<prompt>",
-  "image": "<a description of an image that combines the character, setting and current prompt>"
+  "image": "<a description of an image that combines the character, setting and current prompt>",
+  "colour": "<a dark colour in hex format that would fit with the theme of the story>"
 }
 
 Command: continue_story
