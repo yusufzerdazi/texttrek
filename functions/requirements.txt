@@ -2,8 +2,8 @@
 # The Python Worker is managed by Azure Functions platform
 # Manually managing azure-functions-worker may cause unexpected issues
 
-azure-functions
-azure-storage-blob
-openai
-python-dotenv
-requests
+azure-functions>=1.20.0
+azure-storage-blob>=12.19.0
+openai>=1.101.0
+python-dotenv>=1.0.0
+requests>=2.31.0
