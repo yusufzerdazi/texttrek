@@ -6,6 +6,8 @@ from openai import OpenAI
 import logging
 import requests
 
+VIDEO_GEN_API = "https://api.aivideoapi.com/runway/generate/text"
+
 app = func.FunctionApp()
 client = OpenAI(
     api_key=os.environ.get("OPEN_AI_KEY")
@@ -49,7 +51,7 @@ Description: Return a JSON response in the following format. The prompt should b
   "danger": "<a number up to 10 representing the current danger level of the situation>",
   "prompt": "<prompt>",
   "image": "<a description of an image that combines the character, setting and current prompt>",
-  "colour": "<a dark colour in hex format that would fit with the theme of the story>"
+  "colour": "<a medium to dark colour in hex format that would fit with the theme of the story>"
 }
 
 Command: continue_story
@@ -146,7 +148,7 @@ def main(req):
     messages.append({"role": "user", "content": "generate_world: " + body["prompt"]})
 
     completion = client.chat.completions.create(
-        model="gpt-4-1106-preview",
+        model="gpt-5",
         messages=messages,
         response_format={ "type": "json_object" }
     )
@@ -214,7 +216,7 @@ def extend_story(vote):
     messages.append({"role": "user", "content": "continue_story: " + selected})
 
     completion = client.chat.completions.create(
-        model="gpt-4-1106-preview",
+        model="gpt-5",
         messages=messages,
         response_format={ "type": "json_object" }
     )
